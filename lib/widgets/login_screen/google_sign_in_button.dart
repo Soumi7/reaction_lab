@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/screens/dashboard_screen.dart';
 import 'package:reaction_lab/utils/authentication.dart';
 
@@ -20,12 +21,14 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             )
           : OutlinedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                side: BorderSide(
+                  color: CustomColors.primaryDark,
+                  width: 2,
                 ),
               ),
               onPressed: () async {
