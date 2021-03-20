@@ -5,10 +5,33 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hi!"),
+        title: Text("Dashboard"),
       ),
       body: Row(
-        children: [Text("HIII")],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Click to enter Reaction Lab",
+            ),
+            ElevatedButton(
+              // onPressed: (){
+              //   Navigator.of(context).push(
+              //     MaterialPageRoute(builder : (context) => PraticeGameScreen()
+              //     ),
+              //   );
+              // }, 
+              child: Text('Practise Lab')),
+
+            ElevatedButton(
+              // onPressed: (){
+              //   Navigator.of(context).push(
+              //     MaterialPageRoute(builder : (context) => MultiplayerScreen()
+              //     ),
+              //   );
+              // }, 
+              child: Text('Enter Reaction Lab')),
+
+          ],
       ),
     );
   }
