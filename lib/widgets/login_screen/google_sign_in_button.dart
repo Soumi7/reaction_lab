@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:reaction_lab/screens/dashboard_screen.dart';
+import 'package:reaction_lab/utils/authentication.dart';
 
 class GoogleSignInButton extends StatefulWidget {
   @override
@@ -26,25 +29,23 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 ),
               ),
               onPressed: () async {
-                // setState(() {
-                //   _isSigningIn = true;
-                // });
-                // User? user =
-                //     await Authentication.signInWithGoogle(context: context);
+                setState(() {
+                  _isSigningIn = true;
+                });
+                User? user =
+                    await Authentication.signInWithGoogle(context: context);
 
-                // setState(() {
-                //   _isSigningIn = false;
-                // });
+                setState(() {
+                  _isSigningIn = false;
+                });
 
-                // if (user != null) {
-                //   Navigator.of(context).pushReplacement(
-                //     MaterialPageRoute(
-                //       builder: (context) => UserInfoScreen(
-                //         user: user,
-                //       ),
-                //     ),
-                //   );
-                // }
+                if (user != null) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => DashboardScreen(),
+                    ),
+                  );
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
