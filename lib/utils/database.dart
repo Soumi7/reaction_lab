@@ -33,4 +33,5 @@ class Database {
 }
 
 /// The person who creates the room, manages the random number generation,
-/// and new question selection, checks for
+/// and new question selection, checks for if a question is solved
+/// and move on to the next.
