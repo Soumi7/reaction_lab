@@ -43,9 +43,13 @@ class DashboardScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(18.0),
                           child: Text("Problems solved :"),
-                        )
+                        ),
+                        Text("Accuracy :"),
+                        SizedBox(
+                          height: 23.0,
+                        ),
                       ],
                     )),
               ),
