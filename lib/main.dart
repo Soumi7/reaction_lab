@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         fontFamily: 'Raleway',
       ),
+      debugShowCheckedModeBanner: false,
       home: LoginScreen(),
     );
   }

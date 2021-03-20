@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/widgets/login_screen/google_sign_in_button.dart';
 
@@ -30,6 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
   // }
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(CustomColors.primaryAccent);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+
     return Scaffold(
       backgroundColor: CustomColors.primaryAccent,
       body: SafeArea(
