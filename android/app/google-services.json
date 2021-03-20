@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "370842738957",
+    "project_id": "reaca-4d22d",
+    "storage_bucket": "reaca-4d22d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370842738957:android:97b7ed9a04aa2fdb035044",
+        "android_client_info": {
+          "package_name": "com.souvikbiswas.reaction_lab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370842738957-v3kciii0rlbisl5kfol5t05dduqssbui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.souvikbiswas.reaction_lab",
+            "certificate_hash": "1b2d30cca90a4975483912297362a485da08c878"
+          }
+        },
+        {
+          "client_id": "370842738957-igu6n3opq9u4qbid14vlbp8pb9khulq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDbSBE3Ibz1A6BDI8n6j2k-3PS6bsbA2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370842738957-igu6n3opq9u4qbid14vlbp8pb9khulq8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
