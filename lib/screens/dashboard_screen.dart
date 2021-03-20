@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:reaction_lab/res/custom_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
   final User user;
@@ -25,35 +26,59 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomColors.primaryAccent,
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Text("Reaca"),
+        centerTitle: true,
       ),
-      body: 
-      
-      Column( crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.center,
-        children: [
-          Text(
-            "Click to enter Reaction Lab",
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 26.0),
+                child: Container(
+                    color: CustomColors.yellow,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Problems solved :"),
+                        )
+                      ],
+                    )),
+              ),
+              Text(
+                "Click to enter Reaction Lab",
+              ),
+              SizedBox(
+                height: 23.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
+                  //   ),
+                  // );
+                },
+                child: Text('Practise Lab'),
+              ),
+              SizedBox(
+                height: 23.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
+                  //   ),
+                  // );
+                },
+                child: Text('Enter Reaction Lab'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
-              //   ),
-              // );
-            },
-            child: Text('Practise Lab'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
-              //   ),
-              // );
-            },
-            child: Text('Enter Reaction Lab'),
-          ),
-        ],
+        ),
       ),
     );
   }
