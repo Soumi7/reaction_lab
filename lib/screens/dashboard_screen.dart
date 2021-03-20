@@ -23,11 +23,14 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomColors.primaryAccent,
       appBar: AppBar(
         title: Text("Dashboard"),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: 
+      
+      Column( crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.center,
         children: [
           Text(
             "Click to enter Reaction Lab",
