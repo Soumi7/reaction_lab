@@ -3,6 +3,7 @@ import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/utils/authentication.dart';
 import 'package:reaction_lab/widgets/login_screen/google_sign_in_button.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -33,8 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(CustomColors.primaryAccent);
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    if (!kIsWeb) {
+      FlutterStatusbarcolor.setStatusBarColor(CustomColors.primaryAccent);
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    }
 
     return Scaffold(
       backgroundColor: CustomColors.primaryAccent,
