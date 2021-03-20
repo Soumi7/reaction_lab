@@ -12,26 +12,24 @@ class DashboardScreen extends StatelessWidget {
         children: [
           Text(
             "Click to enter Reaction Lab",
-            ),
-            ElevatedButton(
-              // onPressed: (){
-              //   Navigator.of(context).push(
-              //     MaterialPageRoute(builder : (context) => PraticeGameScreen()
-              //     ),
-              //   );
-              // }, 
+          ),
+          ElevatedButton(
+              onPressed: () {
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
+                //   ),
+                // );
+              },
               child: Text('Practise Lab')),
-
-            ElevatedButton(
-              // onPressed: (){
-              //   Navigator.of(context).push(
-              //     MaterialPageRoute(builder : (context) => MultiplayerScreen()
-              //     ),
-              //   );
-              // }, 
+          ElevatedButton(
+              onPressed: () {
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
+                //   ),
+                // );
+              },
               child: Text('Enter Reaction Lab')),
-
-          ],
+        ],
       ),
     );
   }

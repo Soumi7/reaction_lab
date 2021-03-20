@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
+import 'package:reaction_lab/utils/authentication.dart';
 import 'package:reaction_lab/widgets/login_screen/google_sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //   return firebaseApp;
   // }
+
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(CustomColors.primaryAccent);
@@ -71,22 +73,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              GoogleSignInButton(),
-              // FutureBuilder(
-              //   future: Authentication.initializeFirebase(context: context),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return Text('Error initializing Firebase');
-              //     } else if (snapshot.connectionState == ConnectionState.done) {
-              //       return GoogleSignInButton();
-              //     }
-              //     return CircularProgressIndicator(
-              //       valueColor: AlwaysStoppedAnimation<Color>(
-              //         CustomColors.firebaseOrange,
-              //       ),
-              //     );
-              //   },
-              // ),
+              FutureBuilder(
+                future: Authentication.initializeFirebase(context: context),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error initializing Firebase');
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    return GoogleSignInButton();
+                  }
+                  return CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      CustomColors.primaryDark,
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
