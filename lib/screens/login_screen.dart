@@ -8,21 +8,22 @@ class LoginScreen extends StatelessWidget {
     TextEditingController _emailController = TextEditingController();
 
     return Scaffold(
+      backgroundColor: Colors.pinkAccent,
       appBar: AppBar(
         title: Text('Flutter hello'),
       ),
-      body: Column(
+      body: Padding(  
+            padding: EdgeInsets.all(40),  
+            child : Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'helloo1',
-          ),
-          Text(
-            'helloo2',
-          ),
           TextField(
             controller: _emailController,
           ),
+          SizedBox(
+            width: 100.0,
+            height: 30.0,
+            ),
           ElevatedButton(
             onPressed: () {
               print("");
@@ -36,6 +37,7 @@ class LoginScreen extends StatelessWidget {
           ),
         ],
       ),
+      )
     );
   }
 }
