@@ -11,13 +11,13 @@ final CollectionReference _roomsCollection = _firestore.collection('rooms');
 class Database {
   static late User user;
 
-  List<String> tracks = [
+  static List<String> _levels = [
     'easy',
     'medium',
     'hard',
   ];
 
-  Map<String, List<Set<dynamic>>> poses = {
+  static Map<String, List<Set<dynamic>>> _problemMap = {
     'easy': [
       {
         '#Fe + #Cl2 -> #FeCl3',
@@ -56,7 +56,30 @@ class Database {
     }).catchError((e) => print(e));
   }
 
-  static uploadProblemData() {}
+  static uploadProblemData() async {
+    _problemMap.forEach((level, levelDataList) {
+      DocumentReference levelReference = _problemsCollection.doc(level);
+
+      int index = 0;
+
+      levelDataList.forEach((data) async {
+        DocumentReference problemReference =
+            levelReference.collection('statements').doc('$index');
+
+        Map<String, dynamic> problemInfo = {
+          'formula': data.elementAt(0),
+          'correct_options': data.elementAt(1),
+          'options': data.elementAt(2),
+        };
+
+        await problemReference.set(problemInfo).whenComplete(() {
+          print('Data added -> $level - $index');
+        }).catchError((_) => print('Failed to added -> $level - $index'));
+
+        index++;
+      });
+    });
+  }
 
   static retrieveUserData() {}
 
