@@ -56,13 +56,14 @@ class Database {
     }).catchError((e) => print(e));
   }
 
-  static uploadProblemData() async {
+  static Future<void> uploadProblemData() async {
     _problemMap.forEach((level, levelDataList) {
       DocumentReference levelReference = _problemsCollection.doc(level);
 
-      int index = 0;
+      int index = -1;
 
       levelDataList.forEach((data) async {
+        index++;
         DocumentReference problemReference =
             levelReference.collection('statements').doc('$index');
 
@@ -75,8 +76,6 @@ class Database {
         await problemReference.set(problemInfo).whenComplete(() {
           print('Data added -> $level - $index');
         }).catchError((_) => print('Failed to added -> $level - $index'));
-
-        index++;
       });
     });
   }
