@@ -1,13 +1,60 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reaction_lab/res/strings.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final CollectionReference _mainCollection = _firestore.collection('notes');
+final CollectionReference _usersCollection = _firestore.collection('users');
+final CollectionReference _problemsCollection =
+    _firestore.collection('problems');
+final CollectionReference _roomsCollection = _firestore.collection('rooms');
 
 class Database {
-  static String? userUid;
+  static late User user;
 
-  static uploadUserData() {}
+  List<String> tracks = [
+    'easy',
+    'medium',
+    'hard',
+  ];
+
+  Map<String, List<Set<dynamic>>> poses = {
+    'easy': [
+      {
+        '#Fe + #Cl2 -> #FeCl3',
+        [2, 3, 2],
+        [2, 5, 4, 3, 6, 2, 1, 2, 4],
+      },
+      {
+        '#Fe + #O2 -> #Fe2O3',
+        [4, 3, 2],
+        [1, 7, 4, 4, 6, 1, 1, 2, 3],
+      },
+      {
+        '#Al + #O2 -> #Al2O3',
+        [4, 3, 2],
+        [3, 5, 4, 3, 6, 2, 5, 2, 1],
+      },
+    ],
+  };
+
+  static uploadUserData({required String userName}) async {
+    DocumentReference documentReferencer = _usersCollection.doc(user.uid);
+
+    Map<String, dynamic> userData = <String, dynamic>{
+      "uid": user.uid,
+      "imageUrl": user.photoURL,
+      "userName": userName,
+      "email": user.email,
+      "token": 0,
+      "solved": 0,
+      "accuracy": 0.0,
+    };
+    print('USER DATA:\n$userData');
+
+    await documentReferencer.set(userData).whenComplete(() {
+      print('User data stored successfully!');
+    }).catchError((e) => print(e));
+  }
 
   static uploadProblemData() {}
 
