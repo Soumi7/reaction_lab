@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reaction_lab/res/strings.dart';
+import 'dart:math';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _usersCollection = _firestore.collection('users');
@@ -58,14 +59,14 @@ class Database {
 
   static Future<void> uploadProblemData() async {
     _problemMap.forEach((level, levelDataList) {
-      DocumentReference levelReference = _problemsCollection.doc(level);
-
       int index = -1;
 
       levelDataList.forEach((data) async {
         index++;
-        DocumentReference problemReference =
-            levelReference.collection('statements').doc('$index');
+        DocumentReference problemReference = _problemsCollection
+            .doc(level)
+            .collection('statements')
+            .doc('$index');
 
         Map<String, dynamic> problemInfo = {
           'formula': data.elementAt(0),
@@ -86,17 +87,141 @@ class Database {
     String difficultyLevel = difficulty.parseToString();
   }
 
-  static createNewRoom({required Difficulty difficulty}) {}
+  static createNewRoom({required Difficulty difficulty}) {
+    DocumentReference documentReference = _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc();
 
-  static generateProblem({
-    required String uid1,
-    required String uid2,
-  }) {
-    // TODO: Generate the random
+    int currentDateTimeEpoch = DateTime.now().millisecondsSinceEpoch;
+
+    Map<String, dynamic> roomInfo = {
+      'id': documentReference.id,
+      'epoch': currentDateTimeEpoch,
+      'canGenerateNextQ': false,
+      'uid1': user.uid,
+      'score1': 0,
+      'isSolved1': false,
+      'isAvailable': true,
+    };
+
+    documentReference.set(roomInfo).whenComplete(() {
+      print('Created a new room, ID: ${documentReference.id}');
+    }).catchError((e) => print(e));
   }
 
-  // TODO: Retrieve problem statement and the options
-  static retrieveProblem({required}) {}
+  static Stream<QuerySnapshot> retrieveRoomData({
+    required Difficulty difficulty,
+  }) {
+    Stream<QuerySnapshot> roomsQuery = _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .where('isAvailable', isEqualTo: true)
+        .snapshots();
+
+    return roomsQuery;
+  }
+
+  static joinRoom({
+    required Difficulty difficulty,
+    required String roomDocumentId,
+  }) {
+    DocumentReference documentReference = _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomDocumentId);
+
+    Map<String, dynamic> secondUserInfo = {
+      'canGenerateNextQ': true,
+      'uid2': user.uid,
+      'score2': 0,
+      'isSolved2': false,
+      'isAvailable': false,
+    };
+
+    documentReference.update(secondUserInfo).whenComplete(() {
+      print('Room joining successful, ID: ${documentReference.id}');
+    }).catchError((e) => print(e));
+  }
+
+  static generateProblem({
+    // required String uid1,
+    // required String uid2,
+    required Difficulty difficulty,
+    required String roomDocumentId,
+    required String questionIndex,
+  }) async {
+    DocumentSnapshot roomSnapshot = await _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomDocumentId)
+        .get();
+
+    Map<String, dynamic> roomData = roomSnapshot.data()!;
+
+    bool canGenerateNextQ = roomData['canGenerateNextQ'];
+    String roomCreatorUid = roomData['uid1'];
+
+    if (canGenerateNextQ && roomCreatorUid == user.uid) {
+      QuerySnapshot statementsSnapshot = await _problemsCollection
+          .doc(difficulty.parseToString())
+          .collection('statements')
+          .get();
+
+      int totalNumberOfProblems = statementsSnapshot.docs.length;
+
+      Random random = Random();
+      int randomNumber = random.nextInt(totalNumberOfProblems);
+
+      // Map<String, dynamic> statementData =
+      //     statementsSnapshot.docs.elementAt(randomNumber).data()!;
+
+      // String formula = statementData['formula'];
+      // List<int> correctOptions = statementData['correct_options'];
+      // List<int> options = statementData['options'];
+
+      DocumentReference roomReference = _roomsCollection
+          .doc(difficulty.parseToString())
+          .collection('breakouts')
+          .doc(roomDocumentId);
+
+      Map<String, dynamic> questionNumberData = {
+        'question_number': randomNumber
+      };
+
+      await roomReference.update(questionNumberData).whenComplete(() {
+        print('Updated question number to: $randomNumber');
+      }).catchError((e) => print(e));
+    }
+  }
+
+  static Future<Map<String, dynamic>> retrieveProblem({
+    required Difficulty difficulty,
+    required String roomDocumentId,
+    required String questionIndex,
+  }) async {
+    DocumentSnapshot roomSnapshot = await _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomDocumentId)
+        .get();
+
+    int questionNumber = roomSnapshot.data()!['question_number'];
+
+    DocumentSnapshot statementSnapshot = await _problemsCollection
+        .doc(difficulty.parseToString())
+        .collection('statements')
+        .doc('$questionNumber')
+        .get();
+
+    Map<String, dynamic> statementData = statementSnapshot.data()!;
+
+    // String formula = statementData['formula'];
+    // List<int> correctOptions = statementData['correct_options'];
+    // List<int> options = statementData['options'];
+
+    return statementData;
+  }
 
   static checkIfAccountExists() {}
 }
