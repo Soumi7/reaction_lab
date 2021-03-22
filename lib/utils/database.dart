@@ -98,6 +98,8 @@ class Database {
     Map<String, dynamic> roomInfo = {
       'id': documentReference.id,
       'epoch': currentDateTimeEpoch,
+      'type': '2 players',
+      'difficulty': difficulty.parseToString(),
       'canGenerateNextQ': false,
       'uid1': user.uid,
       'score1': 0,
