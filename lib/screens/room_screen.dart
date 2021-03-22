@@ -2,15 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
+import 'package:reaction_lab/screens/finding_players_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
 
-class GameScreen extends StatefulWidget {
+class RoomScreen extends StatefulWidget {
   @override
-  _GameScreenState createState() => _GameScreenState();
+  _RoomScreenState createState() => _RoomScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _RoomScreenState extends State<RoomScreen> {
+  bool _isCreatingRoom = false;
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     super.dispose();
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   @override
@@ -32,54 +36,190 @@ class _GameScreenState extends State<GameScreen> {
     FlutterStatusbarcolor.setStatusBarColor(Colors.white);
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
 
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Create room'),
-            ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: Database.retrieveRoomData(difficulty: Difficulty.easy),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.separated(
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> roomData =
-                        snapshot.data!.docs[index].data()!;
+    return WillPopScope(
+      onWillPop: () async {
+        SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Rooms',
+                      style: TextStyle(
+                        fontSize: 32.0,
+                        color: CustomColors.primaryDark,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    _isCreatingRoom
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                CustomColors.primaryDark,
+                              ),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _isCreatingRoom = true;
+                              });
+                              String? roomId = await Database.createNewRoom(
+                                difficulty: Difficulty.easy,
+                              );
+                              setState(() {
+                                _isCreatingRoom = false;
+                              });
 
-                    String id = roomData['id'];
-                    String type = roomData['type'];
-                    String difficulty = roomData['difficulty'];
-
-                    return Card(
-                      child: Row(
-                        children: [
-                          Text(id),
-                          Text(type),
-                          Text(difficulty),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text('JOIN'),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => FindingPlayersScreen(
+                                    difficulty: Difficulty.easy,
+                                    roomId: roomId!,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.orangeDark,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  'Create room',
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ],
+                  ],
+                ),
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: Database.retrieveRoomData(difficulty: Difficulty.easy),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> roomData =
+                              snapshot.data!.docs[index].data()!;
+
+                          String id = roomData['id'];
+                          String type = roomData['type'];
+                          String difficulty = roomData['difficulty'];
+
+                          return Card(
+                            color: CustomColors.primaryAccent,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 8.0,
+                                left: 16.0,
+                                right: 16.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          id,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: CustomColors.primaryDark,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                        Text(
+                                          type,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: CustomColors.primaryDark,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                        Text(
+                                          difficulty,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: CustomColors.primaryDark,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary: CustomColors.primaryDark,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 16.0,
+                                        right: 16.0,
+                                        top: 8.0,
+                                        bottom: 8.0,
+                                      ),
+                                      child: Text(
+                                        'JOIN',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 8.0,
+                        ),
+                        itemCount: snapshot.data!.docs.length,
                       ),
                     );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: 8.0,
-                  ),
-                  itemCount: snapshot.data!.docs.length,
-                );
-              }
+                  }
 
-              return Container();
-            },
-          )
-        ],
+                  return Container();
+                },
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
