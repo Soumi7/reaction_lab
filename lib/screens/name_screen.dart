@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'dashboard_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NameScreen extends StatelessWidget {
+  final User user;
+  const NameScreen({required this.user});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +30,7 @@ class NameScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: (){
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => DashboardScreen(user = Null))
+                    MaterialPageRoute(builder: (context) => DashboardScreen(user = user))
                   );
                 },
                 child: Text("Go to Dashboard"),),
