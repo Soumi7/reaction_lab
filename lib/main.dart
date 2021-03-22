@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reaction_lab/screens/debug_screen.dart';
 import 'package:reaction_lab/screens/login_screen.dart';
 
 void main() {
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
+      // home: DebugScreen(),
     );
   }
 }
