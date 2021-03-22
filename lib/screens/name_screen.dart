@@ -29,9 +29,9 @@ class NameScreen extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))
                   ),
-                  focusedBorder: OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(color: Colors.red),
+                  borderSide: BorderSide(color: Colors.white10),
                 ),
                 ),
               )
