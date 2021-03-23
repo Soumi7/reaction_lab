@@ -40,13 +40,16 @@ class NameScreen extends StatelessWidget {
                 height: 20.0,
               ),
               Padding(padding: const EdgeInsets.all(3.0),
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => DashboardScreen(user : user,))
-                  );
-                },
-                child: Text("Go to Dashboard"),),
+              child: Container(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  onPressed: (){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => DashboardScreen(user : user,))
+                    );
+                  },
+                  child: Text("Go to Dashboard"),),
+              ),
               )
             ],
           ),
