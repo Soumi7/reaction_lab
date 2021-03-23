@@ -4,9 +4,7 @@ import 'dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class NameScreen extends StatelessWidget {
-  final User user;
-  const NameScreen({required this.user});
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
