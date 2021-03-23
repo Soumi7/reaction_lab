@@ -8,7 +8,7 @@ class NameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.primaryAccent,
+      backgroundColor: Colors.white10,
       appBar: AppBar(
         title: Text("Reaca"),
         centerTitle: true,

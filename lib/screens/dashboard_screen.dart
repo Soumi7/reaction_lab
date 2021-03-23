@@ -25,56 +25,65 @@ class DashboardScreen extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 26.0),
-                child: Container(
-                    width: double.maxFinite,
-                    color: CustomColors.yellow,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Text("Problems solved :"),
-                        ),
-                        Text("Accuracy :"),
-                        SizedBox(
-                          height: 23.0,
-                        ),
-                      ],
-                    )),
-              ),
-              Text(
-                "Click to enter Reaction Lab",
-              ),
-              SizedBox(
-                height: 23.0,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
-                  //   ),
-                  // );
-                },
-                child: Text('Practise Lab'),
-              ),
-              SizedBox(
-                height: 23.0,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
-                  //   ),
-                  // );
-                },
-                child: Text('Enter Reaction Lab'),
-              ),
-            ],
+          child: Container(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 26.0),
+                  child: Container(
+                      width: double.maxFinite,
+                      color: CustomColors.yellow,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Text("Problems solved :"),
+                          ),
+                          Text("Accuracy :"),
+                          SizedBox(
+                            height: 23.0,
+                          ),
+                        ],
+                      )),
+                ),
+                Text(
+                  "Click to enter Reaction Lab",
+                ),
+                SizedBox(
+                  height: 23.0,
+                ),
+                Container(
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
+                      //   ),
+                      // );
+                    },
+                    child: Text('Practise Lab'),
+                  ),
+                ),
+                SizedBox(
+                  height: 23.0,
+                ),
+                Container(
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
+                      //   ),
+                      // );
+                    },
+                    child: Text('Enter Reaction Lab'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
