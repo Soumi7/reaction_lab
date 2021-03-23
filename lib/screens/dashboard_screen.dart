@@ -17,7 +17,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.primaryAccent,
+      backgroundColor: Colors.white10,
       appBar: AppBar(
         title: Text("Reaca"),
         centerTitle: true,
@@ -35,7 +35,7 @@ class DashboardScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 26.0),
                   child: Container(
                       width: double.maxFinite,
-                      color: CustomColors.yellow,
+                      color: CustomColors.primaryAccent,
                       child: Column(
                         children: [
                           Padding(
