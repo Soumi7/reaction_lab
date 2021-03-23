@@ -45,7 +45,7 @@ class NameScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: (){
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => DashboardScreen(user : user,))
+                      MaterialPageRoute(builder: (context) => DashboardScreen())
                     );
                   },
                   child: Text("Go to Dashboard"),),

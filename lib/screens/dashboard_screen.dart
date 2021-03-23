@@ -32,6 +32,7 @@ class DashboardScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 26.0),
                 child: Container(
+                    width: double.maxFinite,
                     color: CustomColors.yellow,
                     child: Column(
                       children: [
