@@ -1,14 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
-  final User user;
-
-  // named constructors are defined inside { }, otherwise
-  // can also be defined without them (But named easy to use).
-  const DashboardScreen({required this.user});
-
   /// TODO: Define the following inside a column:
   /// * an Info area showing player stats
   /// * then two buttons leading to:

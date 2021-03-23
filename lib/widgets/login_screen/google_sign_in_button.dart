@@ -4,6 +4,7 @@ import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/screens/dashboard_screen.dart';
 import 'package:reaction_lab/screens/name_screen.dart';
 import 'package:reaction_lab/utils/authentication.dart';
+import 'package:reaction_lab/utils/database.dart';
 
 class GoogleSignInButton extends StatefulWidget {
   @override
@@ -46,11 +47,10 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 });
 
                 if (user != null) {
+                  Database.user = user;
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => NameScreen(
-                        user: user,
-                      ),
+                      builder: (context) => NameScreen(),
                     ),
                   );
                 }

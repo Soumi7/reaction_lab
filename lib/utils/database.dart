@@ -87,7 +87,8 @@ class Database {
     String difficultyLevel = difficulty.parseToString();
   }
 
-  static createNewRoom({required Difficulty difficulty}) {
+  static Future<String?> createNewRoom({required Difficulty difficulty}) async {
+    String? roomId;
     DocumentReference documentReference = _roomsCollection
         .doc(difficulty.parseToString())
         .collection('breakouts')
@@ -98,16 +99,22 @@ class Database {
     Map<String, dynamic> roomInfo = {
       'id': documentReference.id,
       'epoch': currentDateTimeEpoch,
+      'type': '2 players',
+      'difficulty': difficulty.parseToString(),
       'canGenerateNextQ': false,
       'uid1': user.uid,
+      'username1': user.displayName,
       'score1': 0,
       'isSolved1': false,
       'isAvailable': true,
     };
 
-    documentReference.set(roomInfo).whenComplete(() {
+    await documentReference.set(roomInfo).whenComplete(() {
       print('Created a new room, ID: ${documentReference.id}');
+      roomId = documentReference.id;
     }).catchError((e) => print(e));
+
+    return roomId;
   }
 
   static Stream<QuerySnapshot> retrieveRoomData({
@@ -122,6 +129,19 @@ class Database {
     return roomsQuery;
   }
 
+  static Stream<DocumentSnapshot> retrieveSingleRoomData({
+    required Difficulty difficulty,
+    required String roomId,
+  }) {
+    Stream<DocumentSnapshot> singleRoomSnapshot = _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomId)
+        .snapshots();
+
+    return singleRoomSnapshot;
+  }
+
   static joinRoom({
     required Difficulty difficulty,
     required String roomDocumentId,
@@ -134,6 +154,7 @@ class Database {
     Map<String, dynamic> secondUserInfo = {
       'canGenerateNextQ': true,
       'uid2': user.uid,
+      'username2': user.displayName,
       'score2': 0,
       'isSolved2': false,
       'isAvailable': false,
