@@ -8,20 +8,21 @@ import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/screens/game_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
 
-class WaitingForQuestionScreen extends StatefulWidget {
+class WaitingForNextQuestionScreen extends StatefulWidget {
   final Map<String, dynamic> roomData;
 
-  const WaitingForQuestionScreen({
+  const WaitingForNextQuestionScreen({
     Key? key,
     required this.roomData,
   }) : super(key: key);
 
   @override
-  _WaitingForQuestionScreenState createState() =>
-      _WaitingForQuestionScreenState();
+  _WaitingForNextQuestionScreenState createState() =>
+      _WaitingForNextQuestionScreenState();
 }
 
-class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
+class _WaitingForNextQuestionScreenState
+    extends State<WaitingForNextQuestionScreen> {
   late String roomId;
   late String difficulty;
 
@@ -37,15 +38,6 @@ class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
     }
     roomId = widget.roomData['id'];
     difficulty = widget.roomData['difficulty'];
-
-    Future.delayed(
-      Duration(seconds: 2),
-      () => Database.generateProblem(
-        difficulty: Difficulty.easy,
-        roomDocumentId: roomId,
-        // questionIndex: '0',
-      ),
-    );
   }
 
   @override
@@ -74,9 +66,15 @@ class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
             Map<String, dynamic> roomData = snapshot.data!.data()!;
             int? questionNumber = roomData['question_number'];
 
-            if (questionNumber != null) {
-              WidgetsBinding.instance!.addPostFrameCallback((_) {
-                Navigator.of(context).pushReplacement(
+            bool isSolved1 = roomData['isSolved1'];
+            bool isSolved2 = roomData['isSolved2'];
+
+            if (isSolved1 && isSolved2) {
+              Database.generateProblem(
+                difficulty: Difficulty.easy,
+                roomDocumentId: roomId,
+              ).whenComplete(
+                () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => GameScreen(
                       roomId: roomId,
@@ -84,9 +82,21 @@ class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
                       // questionNumber: 0,
                     ),
                   ),
-                );
-              });
+                ),
+              );
             }
+
+            // if (questionNumber != 4) {
+            //   Navigator.of(context).pushReplacement(
+            //     MaterialPageRoute(
+            //       builder: (context) => GameScreen(
+            //         roomId: roomId,
+            //         roomData: roomData,
+            //         // questionNumber: 0,
+            //       ),
+            //     ),
+            //   );
+            // }
           }
 
           return Center(
