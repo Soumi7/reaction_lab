@@ -36,6 +36,10 @@ class _GameScreenState extends State<GameScreen> {
       FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     }
 
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Text('Game screen'),
+      ),
+    );
   }
 }
