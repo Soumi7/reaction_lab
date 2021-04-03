@@ -18,22 +18,26 @@ class Database {
     'hard',
   ];
 
+  // TODO: Add more problems here
   static Map<String, List<Set<dynamic>>> _problemMap = {
     'easy': [
       {
-        '#Fe + #Cl2 -> #FeCl3',
-        [2, 3, 2],
-        [2, 5, 4, 3, 6, 2, 1, 2, 4],
+        '#Fe + #Cl2 -> #FeCl3', // formula
+        [2, 3, 2], // correct options
+        [2, 5, 4, 3, 6, 2, 1, 2, 4], // options to choose from
+        '2Fe + 3Cl2 -> 2FeCl3', // solved formula
       },
       {
         '#Fe + #O2 -> #Fe2O3',
         [4, 3, 2],
         [1, 7, 4, 4, 6, 1, 1, 2, 3],
+        '4Fe + 3O2 -> 2Fe2O3',
       },
       {
         '#Al + #O2 -> #Al2O3',
         [4, 3, 2],
         [3, 5, 4, 3, 6, 2, 5, 2, 1],
+        '4Al + 3O2 -> 2Al2O3',
       },
     ],
   };
@@ -72,6 +76,7 @@ class Database {
           'formula': data.elementAt(0),
           'correct_options': data.elementAt(1),
           'options': data.elementAt(2),
+          'solvedFormula': data.elementAt(3),
         };
 
         await problemReference.set(problemInfo).whenComplete(() {
@@ -165,12 +170,13 @@ class Database {
     }).catchError((e) => print(e));
   }
 
+  // update isSolves to false
   static generateProblem({
     // required String uid1,
     // required String uid2,
     required Difficulty difficulty,
     required String roomDocumentId,
-    required String questionIndex,
+    // required String questionIndex,
   }) async {
     DocumentSnapshot roomSnapshot = await _roomsCollection
         .doc(difficulty.parseToString())
@@ -207,7 +213,10 @@ class Database {
           .doc(roomDocumentId);
 
       Map<String, dynamic> questionNumberData = {
-        'question_number': randomNumber
+        'question_number': randomNumber,
+        'canGenerateNextQ': false,
+        'isSolved1': false,
+        'isSolved2': false,
       };
 
       await roomReference.update(questionNumberData).whenComplete(() {
@@ -219,7 +228,6 @@ class Database {
   static Future<Map<String, dynamic>> retrieveProblem({
     required Difficulty difficulty,
     required String roomDocumentId,
-    required String questionIndex,
   }) async {
     DocumentSnapshot roomSnapshot = await _roomsCollection
         .doc(difficulty.parseToString())
@@ -227,12 +235,12 @@ class Database {
         .doc(roomDocumentId)
         .get();
 
-    int questionNumber = roomSnapshot.data()!['question_number'];
+    int? questionNumber = roomSnapshot.data()!['question_number'];
 
     DocumentSnapshot statementSnapshot = await _problemsCollection
         .doc(difficulty.parseToString())
         .collection('statements')
-        .doc('$questionNumber')
+        .doc('${questionNumber ?? 0}')
         .get();
 
     Map<String, dynamic> statementData = statementSnapshot.data()!;
@@ -242,6 +250,68 @@ class Database {
     // List<int> options = statementData['options'];
 
     return statementData;
+  }
+
+  static Future<Map<String, dynamic>> retrieveNextProblem({
+    required Difficulty difficulty,
+    required String roomDocumentId,
+    required String questionNumber,
+  }) async {
+    DocumentSnapshot statementSnapshot = await _problemsCollection
+        .doc(difficulty.parseToString())
+        .collection('statements')
+        .doc('$questionNumber')
+        .get();
+
+    Map<String, dynamic> statementData = statementSnapshot.data()!;
+
+    return statementData;
+  }
+
+  // set score, update isSolved to true
+  static Future<void> uploadScore({
+    required int score,
+    required Difficulty difficulty,
+    required String roomDocumentId,
+  }) async {
+    DocumentReference roomReference = _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomDocumentId);
+
+    DocumentSnapshot roomSnapshot = await _roomsCollection
+        .doc(difficulty.parseToString())
+        .collection('breakouts')
+        .doc(roomDocumentId)
+        .get();
+
+    Map<String, dynamic> roomData = roomSnapshot.data()!;
+    String uid1 = roomData['uid1'];
+    String uid2 = roomData['uid2'];
+
+    Map<String, dynamic> solvedData;
+
+    print('current uid: ${user.uid}, uid1: $uid1, uid2: $uid2');
+
+    if (uid1 == user.uid) {
+      solvedData = {
+        // 'question_number': null,
+        'isSolved1': true,
+        'canGenerateNextQ': true,
+        'score1': score,
+      };
+    } else {
+      solvedData = {
+        // 'question_number': null,
+        'isSolved2': true,
+        'canGenerateNextQ': true,
+        'score2': score,
+      };
+    }
+
+    await roomReference.update(solvedData).whenComplete(() {
+      print('Uploaded solved data!');
+    }).catchError((e) => print(e));
   }
 
   static checkIfAccountExists() {}
