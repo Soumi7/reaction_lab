@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
+import 'package:reaction_lab/screens/waiting_for_question_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -57,37 +58,52 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Searching...',
-                    style: TextStyle(
-                      fontSize: 32.0,
-                      color: CustomColors.primaryDark,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: CustomColors.orangeDark,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'Time elapsed: ',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Searching...',
                         style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 32.0,
+                          color: CustomColors.primaryDark,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 1,
                         ),
                       ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: CustomColors.orangeDark,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'Time elapsed: ',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Room id: ${widget.roomId}',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: CustomColors.primaryDark.withOpacity(0.2),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
                     ),
                   ),
                 ],
@@ -103,6 +119,21 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
                   Map<String, dynamic> roomData = snapshot.data!.data()!;
                   String? uid1 = roomData['uid1'];
                   String? uid2 = roomData['uid2'];
+                  bool? canGenerateNextQ = roomData['canGenerateNextQ'];
+
+                  if (canGenerateNextQ != null) {
+                    if (canGenerateNextQ) {
+                      WidgetsBinding.instance!.addPostFrameCallback((_) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => WaitingForQuestionScreen(
+                              roomData: roomData,
+                            ),
+                          ),
+                        );
+                      });
+                    }
+                  }
 
                   print(uid1);
                   print(uid2);
@@ -210,6 +241,7 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
                                         letterSpacing: 1,
                                       ),
                                     ),
+                                    SizedBox(height: 16.0),
                                     CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         CustomColors.primaryDark,
