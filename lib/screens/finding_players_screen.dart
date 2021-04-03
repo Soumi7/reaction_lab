@@ -5,6 +5,7 @@ import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/utils/database.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class FindingPlayersScreen extends StatefulWidget {
   final Difficulty difficulty;
@@ -23,23 +24,29 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    if (!kIsWeb) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+      ]);
+      SystemChrome.setEnabledSystemUIOverlays([]);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    if (!kIsWeb) {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    if (!kIsWeb) {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
