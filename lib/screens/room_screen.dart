@@ -5,7 +5,9 @@ import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/screens/finding_players_screen.dart';
+import 'package:reaction_lab/screens/waiting_for_question_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class RoomScreen extends StatefulWidget {
   @override
@@ -14,27 +16,34 @@ class RoomScreen extends StatefulWidget {
 
 class _RoomScreenState extends State<RoomScreen> {
   bool _isCreatingRoom = false;
+  bool _isJoinningRoom = false;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    if (!kIsWeb) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+      ]);
+      SystemChrome.setEnabledSystemUIOverlays([]);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    if (!kIsWeb) {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    if (!kIsWeb) {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -178,29 +187,55 @@ class _RoomScreenState extends State<RoomScreen> {
                                       ],
                                     ),
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: CustomColors.primaryDark,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 16.0,
-                                        right: 16.0,
-                                        top: 8.0,
-                                        bottom: 8.0,
-                                      ),
-                                      child: Text(
-                                        'JOIN',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.5,
+                                  _isJoinningRoom
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            CustomColors.primaryDark,
+                                          ),
+                                        )
+                                      : ElevatedButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isJoinningRoom = true;
+                                            });
+                                            await Database.joinRoom(
+                                              difficulty: Difficulty.easy,
+                                              roomDocumentId: id,
+                                            );
+                                            setState(() {
+                                              _isJoinningRoom = false;
+                                            });
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WaitingForQuestionScreen(
+                                                  roomData: roomData,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            primary: CustomColors.primaryDark,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 16.0,
+                                              right: 16.0,
+                                              top: 8.0,
+                                              bottom: 8.0,
+                                            ),
+                                            child: Text(
+                                              'JOIN',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: 0.5,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
