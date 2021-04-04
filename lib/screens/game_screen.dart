@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,26 +144,7 @@ class _GameScreenState extends State<GameScreen> {
                             ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: CustomColors.orangeDark,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(24.0),
-                            child: Text(
-                              'Time remaining: ',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ),
-                        ),
+                        TimerWidget(),
                       ],
                     ),
                   );
@@ -441,5 +424,73 @@ class _GameScreenState extends State<GameScreen> {
     //     child: Text('Game screen'),
     //   ),
     // );
+  }
+}
+
+class TimerWidget extends StatefulWidget {
+  const TimerWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _TimerWidgetState createState() => _TimerWidgetState();
+}
+
+class _TimerWidgetState extends State<TimerWidget> {
+  late Timer _timer;
+  int _start = 60;
+
+  startTimer({@required BuildContext? context}) {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 1) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    startTimer(context: context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: CustomColors.orangeDark,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(10),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Text(
+          'Time remaining: $_start',
+          style: TextStyle(
+            fontSize: 16.0,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+    );
   }
 }

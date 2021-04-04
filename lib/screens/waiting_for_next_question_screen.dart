@@ -104,7 +104,7 @@ class _WaitingForNextQuestionScreenState
                   roomDocumentId: roomId,
                 ).whenComplete(
                   () => Future.delayed(
-                    Duration(seconds: 8),
+                    Duration(seconds: 5),
                     () => Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => GameScreen(
