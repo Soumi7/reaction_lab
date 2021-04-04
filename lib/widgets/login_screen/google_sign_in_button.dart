@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/screens/dashboard_screen.dart';
+import 'package:reaction_lab/screens/game_screen.dart';
 import 'package:reaction_lab/screens/name_screen.dart';
+import 'package:reaction_lab/screens/room_screen.dart';
 import 'package:reaction_lab/utils/authentication.dart';
 import 'package:reaction_lab/utils/database.dart';
 
