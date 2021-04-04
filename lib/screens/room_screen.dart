@@ -33,9 +33,13 @@ class _RoomScreenState extends State<RoomScreen> {
   @override
   void dispose() {
     super.dispose();
-    // if (!kIsWeb) {
-    //   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    // }
+    if (!kIsWeb) {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
   }
 
   @override
@@ -47,7 +51,11 @@ class _RoomScreenState extends State<RoomScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+        // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+        // await SystemChrome.setPreferredOrientations([
+        //   DeviceOrientation.portraitUp,
+        //   DeviceOrientation.portraitDown,
+        // ]);
         return true;
       },
       child: Scaffold(
@@ -62,6 +70,10 @@ class _RoomScreenState extends State<RoomScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
                     Text(
                       'Rooms',
                       style: TextStyle(

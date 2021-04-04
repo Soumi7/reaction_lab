@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:reaction_lab/screens/dashboard_screen.dart';
-import 'package:reaction_lab/screens/game_screen.dart';
-import 'package:reaction_lab/screens/name_screen.dart';
-import 'package:reaction_lab/screens/room_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
 
 class Authentication {
@@ -31,7 +28,7 @@ class Authentication {
       Database.user = user;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => NameScreen(),
+          builder: (context) => DashboardScreen(),
         ),
       );
     }
