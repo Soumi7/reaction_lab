@@ -4,6 +4,7 @@ import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/utils/database.dart';
 import 'dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NameScreen extends StatefulWidget {
   @override
@@ -40,8 +41,11 @@ class _NameScreenState extends State<NameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    if (!kIsWeb) {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    }
+
     return GestureDetector(
       onTap: () {
         textFocusNode.unfocus();
@@ -51,6 +55,7 @@ class _NameScreenState extends State<NameScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
+          centerTitle: true,
           title: Text(
             'Reaca',
             style: TextStyle(

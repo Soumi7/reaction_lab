@@ -47,19 +47,19 @@ class Database {
       },
       {
         '#AgI +  #Na2S -> #Ag2S + #NaI',
-        [2,1,1,2],
+        [2, 1, 1, 2],
         [3, 2, 5, 2, 1, 3, 1],
         '2AgI +  1Na2S -> 1Ag2S + 2NaI',
       },
       {
         '#NaBr +  #Cl2 -> #NaCl + #Br2',
-        [2,1,2,1],
+        [2, 1, 2, 1],
         [2, 4, 2, 1, 3, 1, 2],
         '2NaBr +  1Cl2 -> 2NaCl + 1Br2',
       },
       {
         '#TiCl4 + #H2O -> #TiO2 + #HCL',
-        [1,2,1,4],
+        [1, 2, 1, 4],
         [2, 3, 1, 1, 2, 5, 4],
         '1TiCl4 + 2H2O -> 1TiO2 + 4HCL',
       },
@@ -366,7 +366,7 @@ class Database {
 
     Map<String, dynamic> userData = <String, dynamic>{
       "token": token,
-      "solved": solved,
+      "solved": 3,
       "accuracy": double.parse(((solved / 3) * 100).toStringAsFixed(2)),
     };
     print('USER DATA:\n$userData');
