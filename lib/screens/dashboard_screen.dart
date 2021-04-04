@@ -1,89 +1,178 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:reaction_lab/res/custom_colors.dart';
+import 'package:reaction_lab/utils/database.dart';
+import 'dashboard_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class DashboardScreen extends StatelessWidget {
-  /// TODO: Define the following inside a column:
-  /// * an Info area showing player stats
-  /// * then two buttons leading to:
-  ///   * PraticeGameScreen and,
-  ///   * MultiplayerScreen
-  ///
-  /// TIPS: you can define widgets as spearate files to keep
-  /// the code clean, like I have done inside `widgets --> login_screeen` folder
-  /// defined a file called `google_sign_in_button.dart`.
-  ///
-  /// `widgets` then the folder inside it is the `name of the screen` file.
-  ///
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     return Scaffold(
-      backgroundColor: Colors.white10,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Reaca"),
-        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Reaca',
+          style: TextStyle(
+            color: CustomColors.primaryDark,
+            fontSize: 32,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
-      body: Center(
+      body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 26.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      color: CustomColors.primaryAccent,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: Text("Problems solved :"),
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            bottom: 20.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(),
+              FutureBuilder<Map<String, dynamic>>(
+                future: Database.retrieveUserData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Map<String, dynamic> data = snapshot.data!;
+
+                    String userName = data['userName'];
+                    String photoUrl = data['imageUrl'];
+                    int token = data['token'];
+                    int solved = data['solved'];
+                    double accuracy = data['accuracy'];
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              userName,
+                              style: TextStyle(
+                                color: CustomColors.primaryDark,
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Image.network(photoUrl),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Token: ${token}t',
+                          style: TextStyle(
+                            color: CustomColors.orangeDark,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Text("Accuracy :"),
-                          SizedBox(
-                            height: 23.0,
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Solved: $solved',
+                          style: TextStyle(
+                            color: CustomColors.orangeDark,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      )),
-                ),
-                Text(
-                  "Click to enter Reaction Lab",
-                ),
-                SizedBox(
-                  height: 23.0,
-                ),
-                Container(
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Accuracy: $accuracy %',
+                          style: TextStyle(
+                            color: CustomColors.orangeDark,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 24.0),
+                      ],
+                    );
+                  }
+
+                  return Container();
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Container(
                   width: double.maxFinite,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(builder : (context) => PraticeGameScreen()
-                      //   ),
-                      // );
-                    },
-                    child: Text('Practise Lab'),
+                    style: ElevatedButton.styleFrom(
+                      primary: CustomColors.primaryDark,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    // color: CustomColors.primaryDark,
+                    onPressed: () async {},
+
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                      child: Text(
+                        'Practise',
+                        style: TextStyle(
+                          // fontFamily: 'Raleway',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: CustomColors.primaryAccent,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 23.0,
-                ),
-                Container(
+              ),
+              SizedBox(height: 16.0),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Container(
                   width: double.maxFinite,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(builder : (context) => MultiplayerScreen()
-                      //   ),
-                      // );
-                    },
-                    child: Text('Enter Reaction Lab'),
+                    style: ElevatedButton.styleFrom(
+                      primary: CustomColors.primaryDark,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    // color: CustomColors.primaryDark,
+                    onPressed: () async {},
+
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                      child: Text(
+                        'Multiplayer',
+                        style: TextStyle(
+                          // fontFamily: 'Raleway',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: CustomColors.primaryAccent,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
