@@ -24,19 +24,19 @@ class Database {
       {
         '#Fe + #Cl2 -> #FeCl3', // formula
         [2, 3, 2], // correct options
-        [2, 5, 4, 3, 6, 2, 1, 2, 4], // options to choose from
+        [2, 5, 4, 3, 6, 2, 1], // options to choose from
         '2Fe + 3Cl2 -> 2FeCl3', // solved formula
       },
       {
         '#Fe + #O2 -> #Fe2O3',
         [4, 3, 2],
-        [1, 7, 4, 4, 6, 1, 1, 2, 3],
+        [1, 2, 4, 4, 6, 1, 3],
         '4Fe + 3O2 -> 2Fe2O3',
       },
       {
         '#Al + #O2 -> #Al2O3',
         [4, 3, 2],
-        [3, 5, 4, 3, 6, 2, 5, 2, 1],
+        [3, 5, 4, 3, 6, 2, 5],
         '4Al + 3O2 -> 2Al2O3',
       },
     ],
@@ -97,7 +97,8 @@ class Database {
     String difficultyLevel = difficulty.parseToString();
   }
 
-  static Future<String?> createNewRoom({required Difficulty difficulty}) async {
+  static Future<String?> createNewRoom(
+      {required Difficulty difficulty, required String userName}) async {
     String? roomId;
     DocumentReference documentReference = _roomsCollection
         .doc(difficulty.parseToString())
@@ -113,10 +114,11 @@ class Database {
       'difficulty': difficulty.parseToString(),
       'canGenerateNextQ': false,
       'uid1': user.uid,
-      'username1': user.displayName,
+      'username1': userName,
       'score1': 0,
       'isSolved1': false,
       'isAvailable': true,
+      'done': false,
     };
 
     await documentReference.set(roomInfo).whenComplete(() {
@@ -155,6 +157,7 @@ class Database {
   static joinRoom({
     required Difficulty difficulty,
     required String roomDocumentId,
+    required String userName,
   }) {
     DocumentReference documentReference = _roomsCollection
         .doc(difficulty.parseToString())
@@ -164,10 +167,11 @@ class Database {
     Map<String, dynamic> secondUserInfo = {
       'canGenerateNextQ': true,
       'uid2': user.uid,
-      'username2': user.displayName,
+      'username2': userName,
       'score2': 0,
       'isSolved2': false,
       'isAvailable': false,
+      'roundNumber': 0,
     };
 
     documentReference.update(secondUserInfo).whenComplete(() {
@@ -193,39 +197,49 @@ class Database {
 
     bool canGenerateNextQ = roomData['canGenerateNextQ'];
     String roomCreatorUid = roomData['uid1'];
+    int roundNumber = roomData['roundNumber'];
 
-    if (canGenerateNextQ && roomCreatorUid == user.uid) {
-      QuerySnapshot statementsSnapshot = await _problemsCollection
-          .doc(difficulty.parseToString())
-          .collection('statements')
-          .get();
+    if (roundNumber < 3) {
+      if (canGenerateNextQ && roomCreatorUid == user.uid) {
+        QuerySnapshot statementsSnapshot = await _problemsCollection
+            .doc(difficulty.parseToString())
+            .collection('statements')
+            .get();
 
-      int totalNumberOfProblems = statementsSnapshot.docs.length;
+        int totalNumberOfProblems = statementsSnapshot.docs.length;
 
-      Random random = Random();
-      int randomNumber = random.nextInt(totalNumberOfProblems);
+        Random random = Random();
+        int randomNumber = random.nextInt(totalNumberOfProblems);
 
-      // Map<String, dynamic> statementData =
-      //     statementsSnapshot.docs.elementAt(randomNumber).data()!;
+        DocumentReference roomReference = _roomsCollection
+            .doc(difficulty.parseToString())
+            .collection('breakouts')
+            .doc(roomDocumentId);
 
-      // String formula = statementData['formula'];
-      // List<int> correctOptions = statementData['correct_options'];
-      // List<int> options = statementData['options'];
+        Map<String, dynamic> questionNumberData = {
+          'question_number': randomNumber,
+          'roundNumber': FieldValue.increment(1),
+          'canGenerateNextQ': false,
+          'isSolved1': false,
+          'isSolved2': false,
+        };
 
+        await roomReference.update(questionNumberData).whenComplete(() {
+          print('Updated question number to: $randomNumber');
+        }).catchError((e) => print(e));
+      }
+    } else {
       DocumentReference roomReference = _roomsCollection
           .doc(difficulty.parseToString())
           .collection('breakouts')
           .doc(roomDocumentId);
 
       Map<String, dynamic> questionNumberData = {
-        'question_number': randomNumber,
-        'canGenerateNextQ': false,
-        'isSolved1': false,
-        'isSolved2': false,
+        'done': true,
       };
 
       await roomReference.update(questionNumberData).whenComplete(() {
-        print('Updated question number to: $randomNumber');
+        print('Game complete!');
       }).catchError((e) => print(e));
     }
   }
@@ -320,6 +334,23 @@ class Database {
   }
 
   static checkIfAccountExists() {}
+
+  static updateUserScore({required int token}) async {
+    DocumentReference documentReferencer = _usersCollection.doc(user.uid);
+
+    int solved = token > 0 ? token ~/ 10 : 0;
+
+    Map<String, dynamic> userData = <String, dynamic>{
+      "token": token,
+      "solved": solved,
+      "accuracy": double.parse(((solved / 3) * 100).toStringAsFixed(2)),
+    };
+    print('USER DATA:\n$userData');
+
+    await documentReferencer.update(userData).whenComplete(() {
+      print('User data score updated successfully!');
+    }).catchError((e) => print(e));
+  }
 }
 
 /// The person who creates the room, manages the random number generation,
