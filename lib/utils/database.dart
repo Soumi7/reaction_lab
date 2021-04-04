@@ -86,7 +86,12 @@ class Database {
     });
   }
 
-  static retrieveUserData() {}
+  static Future<Map<String, dynamic>> retrieveUserData() async {
+    DocumentReference documentReferencer = _usersCollection.doc(user.uid);
+    DocumentSnapshot userSnapshot = await documentReferencer.get();
+
+    return userSnapshot.data()!;
+  }
 
   static scanForAvialablePlayers({required Difficulty difficulty}) {
     String difficultyLevel = difficulty.parseToString();
