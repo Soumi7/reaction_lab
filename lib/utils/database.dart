@@ -398,12 +398,19 @@ class Database {
   static updateUserScore({required int token}) async {
     DocumentReference documentReferencer = _usersCollection.doc(user.uid);
 
+    DocumentSnapshot userSnapshot = await documentReferencer.get();
+
+    double accuracy = userSnapshot.data()!['accuracy'];
+
     int solved = token > 0 ? token ~/ 10 : 0;
+    double newAccuracy = double.parse(((solved / 3) * 100).toStringAsFixed(2));
 
     Map<String, dynamic> userData = <String, dynamic>{
       "token": token,
-      "solved": 3,
-      "accuracy": double.parse(((solved / 3) * 100).toStringAsFixed(2)),
+      "solved": FieldValue.increment(3),
+      "accuracy": accuracy == 0
+          ? newAccuracy
+          : double.parse(((accuracy + newAccuracy) / 2).toStringAsFixed(2)),
     };
     print('USER DATA:\n$userData');
 
