@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/screens/game_screen.dart';
@@ -12,11 +13,15 @@ import 'package:reaction_lab/utils/database.dart';
 class UploadDataScreen extends StatefulWidget {
   final Map<String, dynamic> roomData;
   final int roundScore;
+  final String correctEq;
+  final String yourEq;
 
   const UploadDataScreen({
     Key? key,
     required this.roomData,
     required this.roundScore,
+    required this.correctEq,
+    required this.yourEq,
   }) : super(key: key);
 
   @override
@@ -49,6 +54,9 @@ class _UploadDataScreenState extends State<UploadDataScreen> {
         MaterialPageRoute(
           builder: (context) => WaitingForNextQuestionScreen(
             roomData: widget.roomData,
+            score: widget.roundScore,
+            correctEq: widget.correctEq,
+            yourEq: widget.yourEq,
           ),
         ),
       ),

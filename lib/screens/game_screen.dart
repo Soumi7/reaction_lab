@@ -208,6 +208,8 @@ class _GameScreenState extends State<GameScreen> {
                     WidgetsBinding.instance!.addPostFrameCallback((_) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => UploadDataScreen(
+                          correctEq: solvedFormula,
+                          yourEq: mySelection,
                           roomData: widget.roomData,
                           roundScore: mySelection == solvedFormula ? 10 : 0,
                         ),
@@ -365,14 +367,20 @@ class _GameScreenState extends State<GameScreen> {
                                 ),
                               ),
                             ),
-                            Text(
-                              'Room id: ${widget.roomId}',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color:
-                                    CustomColors.primaryDark.withOpacity(0.2),
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1,
+                            Container(
+                              width: double.maxFinite,
+                              color: CustomColors.orangeDark,
+                              child: Center(
+                                child: Text(
+                                  'Room id: ${widget.roomId}',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: CustomColors.primaryDark
+                                        .withOpacity(0.5),
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

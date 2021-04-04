@@ -1,21 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/screens/waiting_for_question_screen.dart';
 import 'package:reaction_lab/utils/database.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class FindingPlayersScreen extends StatefulWidget {
   final Difficulty difficulty;
   final String roomId;
+  final String userName;
+  final int token;
 
   const FindingPlayersScreen({
     Key? key,
     required this.difficulty,
     required this.roomId,
+    required this.userName,
+    required this.token,
   }) : super(key: key);
   @override
   _FindingPlayersScreenState createState() => _FindingPlayersScreenState();
@@ -128,6 +133,7 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
                           MaterialPageRoute(
                             builder: (context) => WaitingForQuestionScreen(
                               roomData: roomData,
+                              roundNumber: 1,
                             ),
                           ),
                         );
@@ -157,7 +163,7 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
                                       ),
                                     ),
                                     Text(
-                                      '@souvikbiswas',
+                                      '@${widget.userName}',
                                       style: TextStyle(
                                         fontSize: 20.0,
                                         color: CustomColors.orangeDark,
@@ -167,7 +173,7 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
                                     ),
                                     SizedBox(height: 16.0),
                                     Text(
-                                      '103 t',
+                                      '${widget.token} t',
                                       style: TextStyle(
                                         fontSize: 24.0,
                                         color: CustomColors.orangeLight,

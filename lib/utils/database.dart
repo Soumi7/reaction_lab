@@ -420,7 +420,7 @@ class Database {
 
     Map<String, dynamic> userData = <String, dynamic>{
       "token": token,
-      "solved": solved,
+      "solved": 3,
       "accuracy": double.parse(((solved / 3) * 100).toStringAsFixed(2)),
     };
     print('USER DATA:\n$userData');

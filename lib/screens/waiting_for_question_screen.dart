@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:reaction_lab/res/custom_colors.dart';
 import 'package:reaction_lab/res/strings.dart';
 import 'package:reaction_lab/screens/game_screen.dart';
@@ -10,10 +11,12 @@ import 'package:reaction_lab/utils/database.dart';
 
 class WaitingForQuestionScreen extends StatefulWidget {
   final Map<String, dynamic> roomData;
+  final int roundNumber;
 
   const WaitingForQuestionScreen({
     Key? key,
     required this.roomData,
+    required this.roundNumber,
   }) : super(key: key);
 
   @override
@@ -78,6 +81,7 @@ class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
                     builder: (context) => GameScreen(
                       roomId: roomId,
                       roomData: roomData,
+                      // roundNumber: widget.roundNumber,
                       // questionNumber: 0,
                     ),
                   ),
