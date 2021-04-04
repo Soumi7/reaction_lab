@@ -37,9 +37,9 @@ class _FindingPlayersScreenState extends State<FindingPlayersScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (!kIsWeb) {
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    }
+    // if (!kIsWeb) {
+    //   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // }
   }
 
   @override

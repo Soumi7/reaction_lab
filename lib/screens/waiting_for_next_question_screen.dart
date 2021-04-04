@@ -43,9 +43,9 @@ class _WaitingForNextQuestionScreenState
   @override
   void dispose() {
     super.dispose();
-    if (!kIsWeb) {
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    }
+    // if (!kIsWeb) {
+    //   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // }
   }
 
   @override
@@ -74,12 +74,15 @@ class _WaitingForNextQuestionScreenState
                 difficulty: Difficulty.easy,
                 roomDocumentId: roomId,
               ).whenComplete(
-                () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => GameScreen(
-                      roomId: roomId,
-                      roomData: roomData,
-                      // questionNumber: 0,
+                () => Future.delayed(
+                  Duration(seconds: 2),
+                  () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => GameScreen(
+                        roomId: roomId,
+                        roomData: roomData,
+                        // questionNumber: 0,
+                      ),
                     ),
                   ),
                 ),

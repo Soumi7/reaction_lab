@@ -51,9 +51,6 @@ class _WaitingForQuestionScreenState extends State<WaitingForQuestionScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (!kIsWeb) {
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    }
   }
 
   @override
