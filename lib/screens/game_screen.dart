@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
@@ -89,89 +90,119 @@ class _GameScreenState extends State<GameScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              color: CustomColors.primaryDark,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'You 1 - 2 Other',
-                      style: TextStyle(
-                        fontSize: 32.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
+            StreamBuilder<DocumentSnapshot>(
+              stream: Database.retrieveSingleRoomData(
+                roomId: widget.roomId,
+                difficulty: Difficulty.easy,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  Map<String, dynamic> roomData = snapshot.data!.data()!;
+
+                  String username1 = roomData['username1'];
+                  String username2 = roomData['username2'];
+
+                  int score1 = roomData['score1'];
+                  int score2 = roomData['score2'];
+
+                  int displayScore1 = score1 == 0 ? 0 : score1 ~/ 10;
+                  int displayScore2 = score2 == 0 ? 0 : score2 ~/ 10;
+
+                  return Container(
+                    color: CustomColors.primaryDark,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: RichText(
+                            text: TextSpan(
+                              text: '$username1  ',
+                              style: TextStyle(
+                                fontSize: 26.0,
+                                fontFamily: 'Raleway',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: '$displayScore1 - $displayScore2  ',
+                                  style: TextStyle(
+                                    fontSize: 36.0,
+                                    color: CustomColors.orangeLight,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '$username2',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: CustomColors.orangeDark,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(24.0),
+                            child: Text(
+                              'Time remaining: ',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: CustomColors.orangeDark,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
+                  );
+                }
+
+                return Container(
+                  color: CustomColors.primaryDark,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Container(),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: Text(
-                        'Time remaining: ',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: CustomColors.orangeDark,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(24.0),
+                          child: Text(
+                            'Time remaining: ',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                );
+
+                // return Container();
+              },
             ),
-            // Expanded(
-            //   child: Column(
-            //     children: [
-            //       Expanded(
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: formulaWidget,
-            //         ),
-            //       ),
-            //       Column(
-            //         children: [
-            //           Container(
-            //             // height: 60,
-            //             width: double.maxFinite,
-            //             // color: Colors.transparent,
-            //             color: CustomColors.orangeLight,
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //               children: [
-            //                 for (int i = 4; i < 7; i++) draggableList[i],
-            //               ],
-            //             ),
-            //           ),
-            //           Container(
-            //             // height: 60,
-            //             width: double.maxFinite,
-            //             color: CustomColors.orangeDark,
-            //             child: Padding(
-            //               padding: const EdgeInsets.only(bottom: 16.0),
-            //               child: Row(
-            //                 mainAxisAlignment:
-            //                     MainAxisAlignment.spaceAround,
-            //                 children: [
-            //                   for (int i = 0; i < 4; i++) draggableList[i],
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       )
-            //     ],
-            //   ),
-            // ),
             FutureBuilder<Map<String, dynamic>>(
               future: Database.retrieveProblem(
                 difficulty: Difficulty.easy,
